@@ -1,0 +1,23 @@
+name: Node Application CI
+on:
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Node Application CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR Branch
+        uses: actions/checkout@v3
+
+      - name: Setup Node Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.11.0'
+
+      - name: TEST MESSAGE
+        run: echo "HELLO"
+
+      
