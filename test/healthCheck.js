@@ -1,6 +1,6 @@
 const assert = require('assert');
 const {start, stop} = require('../app');
-const DB = require('../db');
+const DB = require('../database/db');
 
 describe('Health Check', async () => {
     before(async () => {
@@ -14,7 +14,7 @@ describe('Health Check', async () => {
         });
 
         it('without payload and DB connection should get 503 response code', async () => {
-            await DB.closeConnection();
+            await DB.sequelize.close();
             const res = await fetch(`http://localhost:${process.env.PORT}/healthz`);
             assert.equal(res.status, 503);
         });
