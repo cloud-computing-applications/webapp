@@ -1,5 +1,5 @@
 const express = require('express');
-const DBCONNECTION = require('../dbConnection');
+const DB = require('../db');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
     }
 
     try {
-        await DBCONNECTION.checkConnection();
+        await DB.checkConnection();
         return res.send();
     } catch (err) {
         return res.status(503).send();
