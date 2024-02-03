@@ -1,5 +1,5 @@
 const express = require('express');
-const DBCONNECTION = require('./dbConnection');
+const DB = require('./db');
 const app = express();
 const routes = require('./routes');
 require('dotenv').config();
@@ -8,7 +8,7 @@ let server;
 
 async function start() {
     try {
-        await DBCONNECTION.init();
+        await DB.init();
         console.log("DB connection established");
     } catch (err) {
         console.log("DB connection lost");
@@ -36,7 +36,7 @@ async function stop() {
     if(server) {
         server.close(async () => {
             console.log("Server closed");
-            await DBCONNECTION.closeConnection();
+            await DB.closeConnection();
             console.log("DB connection closed");
         });
     }
