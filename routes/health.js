@@ -1,5 +1,5 @@
 const express = require('express');
-const DB = require('../db');
+const DB = require('../database/db');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
     }
 
     try {
-        await DB.checkConnection();
+        await DB.sequelize.authenticate();
         return res.send();
     } catch (err) {
         return res.status(503).send();

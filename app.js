@@ -1,14 +1,14 @@
 const express = require('express');
-const DB = require('./db');
+const dbBootstrap = require('./database/bootstrap');
+const DB = require('./database/db');
 const app = express();
 const routes = require('./routes');
-require('dotenv').config();
 
 let server;
 
 async function start() {
     try {
-        await DB.init();
+        await dbBootstrap();
         console.log("DB connection established");
     } catch (err) {
         console.log("DB connection lost");
@@ -36,7 +36,7 @@ async function stop() {
     if(server) {
         server.close(async () => {
             console.log("Server closed");
-            await DB.closeConnection();
+            await DB.sequelize.close();
             console.log("DB connection closed");
         });
     }
