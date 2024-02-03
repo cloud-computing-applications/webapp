@@ -2,7 +2,9 @@ const express = require('express');
 const dbBootstrap = require('./database/bootstrap');
 const DB = require('./database/db');
 const app = express();
-const routes = require('./routes');
+const routesV1 = require('./routesV1');
+const health = require('./health');
+const noCacheMiddleWare = require('./middlewares/noCache');
 
 let server;
 
@@ -16,7 +18,8 @@ async function start() {
 
     app.use(express.json());
 
-    app.use('/', routes);
+    app.use('/healthz', noCacheMiddleWare, health);
+    app.use('/v1', routesV1);
 
     app.all('*', async (req, res) => {
         return res.status(404).send();

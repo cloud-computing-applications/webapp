@@ -2,12 +2,12 @@ const DB = require('../database/db');
 const { users } = DB.models;
 
 class UserRepository {
-    static async createUser(userObject) {
+    static async createUser(username, password, first_name, last_name) {
         const user = await users.create({
-            username: userObject.username,
-            password: userObject.password,
-            first_name: userObject.first_name,
-            last_name: userObject.last_name
+            username: username,
+            password: password,
+            first_name: first_name,
+            last_name: last_name
         });
 
         return user;
@@ -22,9 +22,17 @@ class UserRepository {
         return result;
     }
 
-    static async findUser(userId) {
+    static async findUserByUsername(userName) {
         const user = await users.findOne(
-            { where: { id: userId } }
+            { where: { username: userName } }
+        );
+
+        return user;
+    }
+
+    static async findUserById(user_id) {
+        const user = await users.findOne(
+            { where: { id: user_id } }
         );
 
         return user;
