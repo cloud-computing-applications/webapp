@@ -1,8 +1,9 @@
 const express = require('express');
 const DB = require('./database/db');
+const { DatabaseError, DATABASE_ERROR_TYPES } = require('./errorHandler');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     if(Object.keys(req.query).length !=0 || (req.headers['content-length'] != undefined && req.headers['content-length'] != 0)) {
         return res.status(400).send();
     }
@@ -11,7 +12,9 @@ router.get('/', async (req, res) => {
         await DB.sequelize.authenticate();
         return res.send();
     } catch (err) {
-        return res.status(503).send();
+        if(err.parent.code == "ECONNREFUSED") {
+            return next(new DatabaseError(DATABASE_ERROR_TYPES.DATABASE_CONNECTION_REFUSED));
+        }
     }
 })
 

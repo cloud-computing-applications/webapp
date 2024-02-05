@@ -5,6 +5,9 @@ const app = express();
 const routesV1 = require('./routesV1');
 const health = require('./health');
 const noCacheMiddleWare = require('./middlewares/noCache');
+const { ValidationError, DatabaseError, AuthenticationError } = require('./errorHandler');
+
+const errorClasses = [ValidationError, DatabaseError, AuthenticationError];
 
 let server;
 
@@ -20,6 +23,17 @@ async function start() {
 
     app.use('/healthz', noCacheMiddleWare, health);
     app.use('/v1', routesV1);
+
+    app.use((err, req, res, next) => {
+        for(const errorClass of errorClasses) {
+            if(err instanceof errorClass) {
+                console.log(`error message: ${err.message}\nhttp status code: ${err.httpStatusCode}`);
+                return res.status(err.httpStatusCode).send();
+            }
+        }
+
+        throw err;
+    })
 
     app.all('*', async (req, res) => {
         return res.status(404).send();
