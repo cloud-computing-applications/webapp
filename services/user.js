@@ -11,10 +11,6 @@ class UserService {
             throw new ValidationError(VALIDATION_ERROR_TYPES.USER_CREATION_MISSING_DATA);
         }
 
-        if(username.length == 0 || password.length == 0 || first_name.length == 0 || last_name.length == 0) {
-            throw new ValidationError(VALIDATION_ERROR_TYPES.USER_CREATION_INVALID_DATA);
-        }
-
         if(username.includes(":") || password.includes(":")) {
             throw new ValidationError(VALIDATION_ERROR_TYPES.USER_CREATION_INVALID_DATA);
         }
@@ -31,9 +27,9 @@ class UserService {
             delete userData.password;
             return userData;
         } catch (err) {
-            if(err.parent.code == "ER_DUP_ENTRY") {
+            if(err.name == "SequelizeUniqueConstraintError") {
                 throw new DatabaseError(DATABASE_ERROR_TYPES.USER_CREATION_DUPLICATE_ENTRY);
-            } else if (err.parent.code == "ECONNREFUSED") {
+            } else if (err.name == "SequelizeConnectionRefusedError") {
                 throw new DatabaseError(DATABASE_ERROR_TYPES.DATABASE_CONNECTION_REFUSED);
             }
 
@@ -48,20 +44,20 @@ class UserService {
             delete userData.password;
             return userData;
         } catch (err) {
-            if(err.parent.code == "ECONNREFUSED") {
+            if(err.name == "SequelizeConnectionRefusedError") {
                 throw new DatabaseError(DATABASE_ERROR_TYPES.DATABASE_CONNECTION_REFUSED);
             }
         }
     }
 
     static async updateUser(user_id, first_name, last_name, password) {
-        if(!first_name && !last_name && !password) {
+        if(first_name == undefined && last_name == undefined && password == undefined) {
             throw new ValidationError(VALIDATION_ERROR_TYPES.USER_UPDATE_MISSING_DATA);
         }
 
         const updateObject = {};
 
-        if(first_name) {
+        if(first_name != undefined) {
             if(first_name.length == 0) {
                 throw new ValidationError(VALIDATION_ERROR_TYPES.USER_UPDATE_INVALID_DATA);
             } else {
@@ -69,7 +65,7 @@ class UserService {
             }
         }
 
-        if(last_name) {
+        if(last_name != undefined) {
             if(last_name.length == 0) {
                 throw new ValidationError(VALIDATION_ERROR_TYPES.USER_UPDATE_INVALID_DATA);
             } else {
@@ -77,7 +73,7 @@ class UserService {
             }
         }
 
-        if(password) {
+        if(password != undefined) {
             if(password.length == 0 || password.includes(":")) {
                 throw new ValidationError(VALIDATION_ERROR_TYPES.USER_UPDATE_INVALID_DATA);
             } else {
@@ -89,7 +85,7 @@ class UserService {
         try {
             await UserRepository.updateUser(user_id, updateObject);
         } catch (err) {
-            if(err.parent.code == "ECONNREFUSED") {
+            if(err.name == "SequelizeConnectionRefusedError") {
                 throw new DatabaseError(DATABASE_ERROR_TYPES.DATABASE_CONNECTION_REFUSED);
             }
         }

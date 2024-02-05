@@ -22,7 +22,7 @@ router.all('/', async (req, res) => {
     return res.status(405).send();
 })
 
-router.use(auth);
+router.use("/self", auth);
 
 router.get('/self', async (req, res, next) => {
     if(Object.keys(req.query).length !=0 || (req.headers['content-length'] != undefined && req.headers['content-length'] != 0)) {
