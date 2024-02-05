@@ -11,9 +11,9 @@ const errorClasses = [ValidationError, DatabaseError, AuthenticationError];
 
 let server;
 
-async function start() {
+async function start(mock = false) {
     try {
-        await dbBootstrap();
+        await dbBootstrap(mock);
         console.log("DB connection established");
     } catch (err) {
         console.log("DB connection lost");

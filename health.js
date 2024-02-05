@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
         await DB.sequelize.authenticate();
         return res.send();
     } catch (err) {
-        if(err.parent.code == "ECONNREFUSED") {
+        if(err.name == "SequelizeConnectionRefusedError") {
             return next(new DatabaseError(DATABASE_ERROR_TYPES.DATABASE_CONNECTION_REFUSED));
         }
     }

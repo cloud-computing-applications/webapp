@@ -1,9 +1,8 @@
 const DB = require('../database/db');
-const { users } = DB.models;
 
 class UserRepository {
     static async createUser(username, password, first_name, last_name) {
-        const user = await users.create({
+        const user = await DB.models.users.create({
             username: username,
             password: password,
             first_name: first_name,
@@ -14,7 +13,7 @@ class UserRepository {
     }
 
     static async updateUser(userId, updateObject) {
-        const result = await users.update(
+        const result = await DB.models.users.update(
             {...updateObject},
             { where: { id: userId } }
         );
@@ -23,7 +22,7 @@ class UserRepository {
     }
 
     static async findUserByUsername(userName) {
-        const user = await users.findOne(
+        const user = await DB.models.users.findOne(
             { where: { username: userName } }
         );
 
@@ -31,7 +30,7 @@ class UserRepository {
     }
 
     static async findUserById(user_id) {
-        const user = await users.findOne(
+        const user = await DB.models.users.findOne(
             { where: { id: user_id } }
         );
 

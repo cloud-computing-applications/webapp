@@ -42,7 +42,7 @@ async function auth(req, res, next) {
 
         return next();
     } catch (err) {
-        if(err.parent.code == "ECONNREFUSED") {
+        if(err.name == "SequelizeConnectionRefusedError") {
             return next(new DatabaseError(DATABASE_ERROR_TYPES.DATABASE_CONNECTION_REFUSED));
         }
     }
