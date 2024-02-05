@@ -37,10 +37,16 @@ const dummyUserObject_4 = {
 
 const dummyUserObject_4_Basic_Token = Buffer.from(`${dummyUserObject_4.username}:${dummyUserObject_4.password}`, 'utf8').toString('base64');
 
+const dummyUserObject_5_Untrimmed = {
+    username: "  dummyUser5@gmail.com   ",
+    password: "password",
+    first_name: "dummy   ",
+    last_name: "   user"
+}
 
 describe('User Endpoints', async () => {
     describe('Create User', async() => {
-        it('New User with valid Payload should get 200 response code with valid response body', async () => {
+        it('New User with valid Payload should get 201 response code with valid response body', async () => {
             const res = await fetch(`http://localhost:${process.env.PORT}/v1/user`, {
                 method: "POST",
                 headers: {
@@ -48,13 +54,34 @@ describe('User Endpoints', async () => {
                 },
                 body: JSON.stringify(dummyUserObject)
             });
-            assert.equal(res.status, 200);
+            assert.equal(res.status, 201);
 
             const data = await res.json();
 
             assert.equal(data.username, dummyUserObject.username);
             assert.equal(data.first_name, dummyUserObject.first_name);
             assert.equal(data.last_name, dummyUserObject.last_name);
+            assert.equal(data.password, undefined);
+            assert.notEqual(data.account_created, undefined);
+            assert.notEqual(data.account_updated, undefined);
+        });
+
+        it('New User with valid Payload and untrimmed field should get 201 response code with trimmed response body', async () => {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dummyUserObject_5_Untrimmed)
+            });
+            assert.equal(res.status, 201);
+
+            const data = await res.json();
+
+            assert.notEqual(data.id, undefined);
+            assert.equal(data.username, dummyUserObject_5_Untrimmed.username.trim());
+            assert.equal(data.first_name, dummyUserObject_5_Untrimmed.first_name.trim());
+            assert.equal(data.last_name, dummyUserObject_5_Untrimmed.last_name.trim());
             assert.equal(data.password, undefined);
             assert.notEqual(data.account_created, undefined);
             assert.notEqual(data.account_updated, undefined);
@@ -266,6 +293,36 @@ describe('User Endpoints', async () => {
             });
 
             assert.equal(res.status, 405);
+        })
+
+        it("Update Existing User with untrimmed field should get 204 response code with fields set as trimmed", async () => {
+            const newFirstName = "       dummy new method    ";
+            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${dummyUserObject_Basic_Token}`
+                },
+                body: JSON.stringify({
+                    first_name: newFirstName,
+                })
+            });
+
+            assert.equal(res.status, 204);
+
+            const resUserData = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${dummyUserObject_Basic_Token}`
+                }
+            });
+
+            assert.equal(resUserData.status, 200);
+
+            const data = await resUserData.json();
+
+            assert.equal(data.first_name, newFirstName.trim());
         })
     })
 });
