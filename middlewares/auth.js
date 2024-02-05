@@ -1,39 +1,51 @@
+const { DatabaseError, DATABASE_ERROR_TYPES, AuthenticationError, AUTHENTICATION_ERROR_TYPES } = require("../errorHandler");
 const UserRepository = require("../repositories/user");
 const bcrypt = require('bcrypt');
 
 async function auth(req, res, next) {
     const authorization = req.headers.authorization;
     if(!authorization) {
-        return res.status(401).send();
+        return next(new AuthenticationError(AUTHENTICATION_ERROR_TYPES.AUTHENTICATION_UNAUTHORIZED));
     }
 
     const splitAuth = authorization.split(" ");
     if(splitAuth.length != 2 || splitAuth[0] != "Basic") {
-        return res.status(401).send();
+        return next(new AuthenticationError(AUTHENTICATION_ERROR_TYPES.AUTHENTICATION_UNAUTHORIZED));
     }
 
     const credentials = Buffer.from(splitAuth[1], 'base64').toString('utf8');
     const credentialSplit = credentials.split(":");
 
     if(credentialSplit.length != 2) {
-        return res.status(401).send();
+        return next(new AuthenticationError(AUTHENTICATION_ERROR_TYPES.AUTHENTICATION_UNAUTHORIZED));
     }
 
     const userName = credentialSplit[0];
     const password = credentialSplit[1];
 
-    const userRecord = await UserRepository.findUserByUsername(userName);
-    const userData = userRecord.dataValues;
+    try {
+        const userRecord = await UserRepository.findUserByUsername(userName);
 
-    const isPasswordValid = await bcrypt.compare(password, userData.password);
+        if(!userRecord) {
+            return next(new AuthenticationError(AUTHENTICATION_ERROR_TYPES.AUTHENTICATION_UNAUTHORIZED));
+        }
 
-    if(!isPasswordValid) {
-        return res.status(401).send();
+        const userData = userRecord.dataValues;
+
+        const isPasswordValid = await bcrypt.compare(password, userData.password);
+
+        if(!isPasswordValid) {
+            return next(new AuthenticationError(AUTHENTICATION_ERROR_TYPES.AUTHENTICATION_UNAUTHORIZED));
+        }
+
+        req.user_id = userRecord.id;
+
+        return next();
+    } catch (err) {
+        if(err.parent.code == "ECONNREFUSED") {
+            return next(new DatabaseError(DATABASE_ERROR_TYPES.DATABASE_CONNECTION_REFUSED));
+        }
     }
-
-    req.user_id = userRecord.id;
-
-    next();
 }
 
 module.exports = auth;
