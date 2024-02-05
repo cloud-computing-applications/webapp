@@ -4,19 +4,18 @@ const bcrypt = require('bcrypt');
 
 class UserService {
     static saltRounds = 10;
-    static emailRegex = new RegExp("^.+@.+\\..+$");
 
     static async createUser(username, password, first_name, last_name) {
         if(!username || !password || !first_name || !last_name) {
             throw new ValidationError(VALIDATION_ERROR_TYPES.USER_CREATION_MISSING_DATA);
         }
 
+        username = username.trim();
+        first_name = first_name.trim();
+        last_name = last_name.trim();
+
         if(username.includes(":") || password.includes(":")) {
             throw new ValidationError(VALIDATION_ERROR_TYPES.USER_CREATION_INVALID_DATA);
-        }
-
-        if(!UserService.emailRegex.test(username)) {
-            throw new ValidationError(VALIDATION_ERROR_TYPES.USER_CREATION_INVALID_USERNAME);
         }
 
         const hashedPassword = await bcrypt.hash(password, UserService.saltRounds);
@@ -31,6 +30,8 @@ class UserService {
                 throw new DatabaseError(DATABASE_ERROR_TYPES.USER_CREATION_DUPLICATE_ENTRY);
             } else if (err.name == "SequelizeConnectionRefusedError") {
                 throw new DatabaseError(DATABASE_ERROR_TYPES.DATABASE_CONNECTION_REFUSED);
+            } else if (err.name == "SequelizeValidationError") {
+                throw new ValidationError(VALIDATION_ERROR_TYPES.USER_CREATION_INVALID_USERNAME);
             }
 
             throw err;
@@ -61,7 +62,7 @@ class UserService {
             if(first_name.length == 0) {
                 throw new ValidationError(VALIDATION_ERROR_TYPES.USER_UPDATE_INVALID_DATA);
             } else {
-                updateObject.first_name = first_name;
+                updateObject.first_name = first_name.trim();
             }
         }
 
@@ -69,7 +70,7 @@ class UserService {
             if(last_name.length == 0) {
                 throw new ValidationError(VALIDATION_ERROR_TYPES.USER_UPDATE_INVALID_DATA);
             } else {
-                updateObject.last_name = last_name;
+                updateObject.last_name = last_name.trim();
             }
         }
 
