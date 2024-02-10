@@ -11,5 +11,5 @@
     - DB_HOST - Enter your MySQL host (if running locally, this would be "localhost")
 
 ## Instructions
-1. Run ```npm install``` at the root directory to install all the dependencies
+1. Run ```npm install``` at the root directory to install all the dependencie
 2. Run ```node index.js``` at the root directory to run the application
