@@ -33,5 +33,5 @@ jobs:
       - name: TEST SECRET BY PRINTING
         env:
           PORT: ${{secrets.PORT}}
-        run: echo "port is $PORT"
+        run: echo "port is ${#PORT}"
       
