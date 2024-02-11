@@ -1,0 +1,35 @@
+name: Integration Test
+on:
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Integration Test
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0.36
+        env:
+          MYSQL_USER: ${{secrets.DB_USERNAME}}
+          MYSQL_PASSWORD: ${{secrets.DB_PASSWORD}}
+          MYSQL_DATABASE: ${{secrets.DB_DATABASE}}
+        ports:
+          - 3306:3306
+
+    steps:
+      - name: Checkout PR Branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: TEST SECRET BY PRINTING
+        run: echo "port is ${{secrets.PORT}}"
+      
