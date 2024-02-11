@@ -31,5 +31,7 @@ jobs:
         run: npm install
 
       - name: TEST SECRET BY PRINTING
-        run: echo "port is ${{secrets.PORT}}"
+        env:
+          PORT: ${{secrets.PORT}}
+        run: echo "port is $PORT"
       
