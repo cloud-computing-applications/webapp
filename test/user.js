@@ -44,6 +44,16 @@ const dummyUserObject_5_Untrimmed = {
     last_name: "   user"
 }
 
+const dummyUserCombinationTest = {
+    username: "test@gmail.com",
+    password: "test",
+    first_name: "test",
+    last_name: "user"
+}
+
+let dummyUserCombinationTest_Basic_Token = Buffer.from(`${dummyUserCombinationTest.username}:${dummyUserCombinationTest.password}`, 'utf8').toString('base64');
+
+
 describe('User Endpoints', async () => {
     describe('Create User', async() => {
         it('New User with valid Payload should get 201 response code with valid response body', async () => {
@@ -324,5 +334,95 @@ describe('User Endpoints', async () => {
 
             assert.equal(data.first_name, newFirstName.trim());
         })
+    })
+
+    describe("Combination Test", async () => {
+        it('Create an account, and using the GET call, validate account exists', async () => {
+            const createUserRes = await fetch(`http://localhost:${process.env.PORT}/v1/user`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dummyUserCombinationTest)
+            });
+            assert.equal(createUserRes.status, 201);
+
+            const createUserData = await createUserRes.json();
+
+            assert.notEqual(createUserData.id, undefined);
+            assert.equal(createUserData.username, dummyUserCombinationTest.username);
+            assert.equal(createUserData.first_name, dummyUserCombinationTest.first_name);
+            assert.equal(createUserData.last_name, dummyUserCombinationTest.last_name);
+            assert.equal(createUserData.password, undefined);
+            assert.notEqual(createUserData.account_created, undefined);
+            assert.notEqual(createUserData.account_updated, undefined);
+
+            const getUserRes = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${dummyUserCombinationTest_Basic_Token}`
+                },
+            });
+            assert.equal(getUserRes.status, 200);
+
+            const getUserData = await getUserRes.json();
+
+            assert.notEqual(getUserData.id, undefined);
+            assert.equal(getUserData.username, dummyUserCombinationTest.username);
+            assert.equal(getUserData.first_name, dummyUserCombinationTest.first_name);
+            assert.equal(getUserData.last_name, dummyUserCombinationTest.last_name);
+            assert.equal(getUserData.password, undefined);
+            assert.notEqual(getUserData.account_created, undefined);
+            assert.notEqual(getUserData.account_updated, undefined);
+        });
+
+        it('Update the account and using the GET call, validate the account was updated', async () => {
+            const newPassword = "password_new";
+            const newFirstName = "test new";
+            const newLastName = "last new"
+            const updateUserRes = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${dummyUserCombinationTest_Basic_Token}`
+                },
+                body: JSON.stringify({
+                    first_name: newFirstName,
+                    last_name: newLastName,
+                    password: newPassword
+                })
+            });
+            assert.equal(updateUserRes.status, 204);
+
+            const getUserResUnAuthorized = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${dummyUserCombinationTest_Basic_Token}`
+                },
+            });
+            assert.equal(getUserResUnAuthorized.status, 401);
+
+            dummyUserCombinationTest_Basic_Token = Buffer.from(`${dummyUserCombinationTest.username}:${newPassword}`, 'utf8').toString('base64');
+            const getUserResAuthorized = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${dummyUserCombinationTest_Basic_Token}`
+                },
+            });
+            assert.equal(getUserResAuthorized.status, 200);
+
+            const getUserAuthorizedData = await getUserResAuthorized.json();
+
+            assert.notEqual(getUserAuthorizedData.id, undefined);
+            assert.equal(getUserAuthorizedData.username, dummyUserCombinationTest.username);
+            assert.equal(getUserAuthorizedData.first_name, newFirstName);
+            assert.equal(getUserAuthorizedData.last_name, newLastName);
+            assert.equal(getUserAuthorizedData.password, undefined);
+            assert.notEqual(getUserAuthorizedData.account_created, undefined);
+            assert.notEqual(getUserAuthorizedData.account_updated, undefined);
+        });
     })
 });

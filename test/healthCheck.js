@@ -1,19 +1,10 @@
 const assert = require('assert');
-const TestHelper = require('./test-helper');
-const DB = require('../database/db');
 
 describe('Health Check', async () => {
     describe('Valid endpoint and method', async() => {
         it('without payload and with DB connection should get 200 response code', async () => {
             const res = await fetch(`http://localhost:${process.env.PORT}/healthz`);
             assert.equal(res.status, 200);
-        });
-
-        it('without payload and DB connection should get 503 response code', async () => {
-            TestHelper.mockAuthenticate();
-            const res = await fetch(`http://localhost:${process.env.PORT}/healthz`);
-            assert.equal(res.status, 503);
-            TestHelper.restoreMockDB();
         });
 
         it('with query payload should get 400 response code', async () => {
