@@ -1,8 +1,7 @@
 const {start, stop} = require('../app');
-const TestHelper = require('./test-helper');
 
 before(async () => {
-    await start(true);
+    await start();
 })
 
 after(async() => {
