@@ -308,7 +308,7 @@ describe('User Endpoints', async () => {
                 })
             });
 
-            assert.equal(res.status, 204);
+            assert.equal(res.status, 205);
 
             const resUserData = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
                 method: "GET",
