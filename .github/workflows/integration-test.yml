@@ -12,9 +12,10 @@ jobs:
       mysql:
         image: mysql:8.0.36
         env:
-          MYSQL_USER: ${{secrets.DB_USERNAME}}
-          MYSQL_PASSWORD: ${{secrets.DB_PASSWORD}}
-          MYSQL_DATABASE: ${{secrets.DB_DATABASE}}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
+          MYSQL_USER: ${{ secrets.DB_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
         ports:
           - 3306:3306
 
@@ -30,8 +31,11 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: TEST SECRET BY PRINTING
+      - name: Run Test
         env:
-          PORT: ${{secrets.PORT}}
-        run: echo "port is ${#PORT}"
+          PORT: ${{ secrets.PORT }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+        run: mocha
       
