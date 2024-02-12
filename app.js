@@ -32,7 +32,7 @@ async function start(mock = false) {
             }
         }
 
-        throw err;
+        stop();
     })
 
     app.all('*', async (req, res) => {
