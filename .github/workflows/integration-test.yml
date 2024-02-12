@@ -25,11 +25,11 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_DATABASE: ${{ secrets.DB_DATABASE }}
         run: |
-          sudo service mysql start
-          mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';"
-          mysql -u root -e "CREATE DATABASE IF NOT EXISTS ${DB_DATABASE};"
-          mysql -u root -e "CREATE USER IF NOT EXISTS '${DB_USERNAME}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
-          mysql -u root -e "GRANT ALL PRIVILEGES ON ${DB_DATABASE}.* TO '${DB_USERNAME}'@'localhost';"
+          sudo systemctl start mysql.service
+          mysql -u root -p root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';"
+          mysql -u root -p root -e "CREATE DATABASE IF NOT EXISTS ${DB_DATABASE};"
+          mysql -u root -p root -e "CREATE USER IF NOT EXISTS '${DB_USERNAME}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
+          mysql -u root -p root -e "GRANT ALL PRIVILEGES ON ${DB_DATABASE}.* TO '${DB_USERNAME}'@'localhost';"
 
       - name: Setup Node Environment
         uses: actions/setup-node@v4
