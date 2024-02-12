@@ -8,20 +8,28 @@ jobs:
   build:
     name: Integration Test
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0.36
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
-          MYSQL_USER: ${{ secrets.DB_USERNAME }}
-          MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
-        ports:
-          - 3306:3306
 
     steps:
       - name: Checkout PR Branch
         uses: actions/checkout@v4
+
+      - name: Install MySQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-server
+      
+      - name: Configure MySQL
+        env:
+          DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+        run: |
+          sudo service mysql start
+          mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';"
+          mysql -e "CREATE DATABASE IF NOT EXISTS ${DB_DATABASE};"
+          mysql -e "CREATE USER IF NOT EXISTS '${DB_USERNAME}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
+          mysql -e "GRANT ALL PRIVILEGES ON ${DB_DATABASE}.* TO '${DB_USERNAME}'@'localhost';"
 
       - name: Setup Node Environment
         uses: actions/setup-node@v4
