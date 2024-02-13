@@ -1,6 +1,7 @@
 const express = require('express');
 const dbBootstrap = require('./database/bootstrap');
 const DB = require('./database/db');
+require('dotenv').config();
 const app = express();
 const routesV1 = require('./routesV1');
 const health = require('./health');
@@ -11,9 +12,9 @@ const errorClasses = [ValidationError, DatabaseError, AuthenticationError];
 
 let server;
 
-async function start(mock = false) {
+async function start(testDB = false, mock = false) {
     try {
-        await dbBootstrap(mock);
+        await dbBootstrap(testDB, mock);
         console.log("DB connection established");
     } catch (err) {
         console.log("DB connection lost");
@@ -27,7 +28,6 @@ async function start(mock = false) {
     app.use((err, req, res, next) => {
         for(const errorClass of errorClasses) {
             if(err instanceof errorClass) {
-                console.log(`error message: ${err.message}\nhttp status code: ${err.httpStatusCode}`);
                 return res.status(err.httpStatusCode).send();
             }
         }
@@ -51,11 +51,20 @@ async function start(mock = false) {
 
 async function stop() {
     if(server) {
+        let shutDownComplete;
+        
+        const shutDownPromise = new Promise((res, rej) => {
+            shutDownComplete = res;
+        })
+        
         server.close(async () => {
             console.log("Server closed");
             await DB.sequelize.close();
             console.log("DB connection closed");
+            shutDownComplete();
         });
+
+        await shutDownPromise;
     }
 }
 
