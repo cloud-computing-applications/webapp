@@ -55,6 +55,11 @@ jobs:
       - name: Checkout PR Branch
         uses: actions/checkout@v4
 
+      - name: Setup Node Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Setup Packer
         uses: hashicorp/setup-packer@main
         with:
@@ -62,3 +67,29 @@ jobs:
       
       - name: Packer Init
         run: packer init packer/
+      
+      - name: Create Environment File
+        run: |
+          echo "PORT=${{ secrets.PORT }} \
+          DB_USERNAME=${{ secrets.DB_USERNAME }} \
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+          DB_HOST=${{ secrets.DB_HOST }}" > .env
+
+      - name: GET Environment
+        run: cat .env
+
+      - name: Build Application Artifacts
+        run: npm run build
+
+      - name: Packer Build
+        env: 
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          GCP_PACKER_CREDENTIALS: ${{ secrets.GCP_PACKER_CREDENTIALS }}
+        run: |
+          packer build -var project_id=${{ secrets.PAK_VAR_PROJECT_ID }} \
+          -var zone=${{ secrets.PAK_VAR_ZONE }} \
+          -var network=${{ secrets.PAK_VAR_NETWORK }} \
+          -var environment=${{ secrets.PAK_VAR_ENVIRONMENT }} \
+          packer/
