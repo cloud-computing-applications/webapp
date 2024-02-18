@@ -24,4 +24,9 @@ jobs:
         run: packer fmt packer/
 
       - name: Packer Validate
+        env:
+            PAK_VAR_project_id: ${{ secrets.PAK_VAR_PROJECT_ID }}
+            PAK_VAR_zone: ${{ secrets.PAK_VAR_ZONE }}
+            PAK_VAR_network: ${{ secrets.PAK_VAR_NETWORK }}
+            PAK_VAR_environment: ${{ secrets.PAK_VAR_ENVIRONMENT }}
         run: packer validate packer/
