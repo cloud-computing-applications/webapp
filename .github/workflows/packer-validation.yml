@@ -28,4 +28,4 @@ jobs:
             zone: ${{ secrets.PAK_VAR_ZONE }}
             network: ${{ secrets.PAK_VAR_NETWORK }}
             environment: ${{ secrets.PAK_VAR_ENVIRONMENT }}
-        run: packer -var project_id=${{ secrets.PAK_VAR_PROJECT_ID }} validate packer/
+        run: packer validate -var project_id=${{ secrets.PAK_VAR_PROJECT_ID }} packer/
