@@ -14,7 +14,8 @@ source "googlecompute" "application-image" {
   zone                = var.zone
   ssh_username        = "packer"
   network             = var.network
-  image_name          = "webapp"
+  image_name          = "webapp-${timestamp()}"
+  image_family        = "webapp"
   image_labels = {
     environment = var.environment
   }
