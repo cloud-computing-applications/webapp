@@ -11,11 +11,19 @@ jobs:
     steps:
       - name: Checkout PR Branch
         uses: actions/checkout@v4
+      
+      - name: Setup Node Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Setup Packer
         uses: hashicorp/setup-packer@main
         with:
           version: latest
+
+      - name: Build Application Artifacts
+        run: npm run build
       
       - name: Packer Init
         run: packer init packer/
