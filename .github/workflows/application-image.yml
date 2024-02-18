@@ -77,9 +77,6 @@ jobs:
           DB_HOST="${{ secrets.DB_HOST }}"
           EOF
 
-      - name: GET Environment
-        run: cat .env
-
       - name: Build Application Artifacts
         run: npm run build
 
