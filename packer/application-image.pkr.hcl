@@ -27,11 +27,11 @@ build {
   sources = ["source.googlecompute.application-image"]
 
   provisioner "shell" {
-    script = "update.sh"
+    script = "packer/update.sh"
   }
 
   provisioner "shell" {
-    script = "setup-node.sh"
+    script = "packer/setup-node.sh"
   }
 
   provisioner "shell" {
@@ -40,6 +40,28 @@ build {
       "DB_PASSWORD=${var.DB_PASSWORD}",
       "DB_DATABASE=${var.DB_DATABASE}"
     ]
-    script = "setup-db.sh"
+    script = "packer/setup-db.sh"
+  }
+
+  provisioner "file" {
+    source = "dist/webapp.zip"
+    destination = "/tmp/webapp.zip"
+  }
+
+  provisioner "shell" {
+    script = "packer/setup-project.sh"
+  }
+
+  provisioner "shell" {
+    script = "packer/setup-system-user.sh"
+  }
+
+  provisioner "file" {
+    source = "packer/csye6225.service"
+    destination = "/tmp/csye6225.service"
+  }
+
+  provisioner "shell" {
+    script = "packer/setup-service.sh"
   }
 }
