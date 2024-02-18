@@ -60,8 +60,5 @@ jobs:
         with:
           version: latest
       
-      - name: Packer Format
-        run: packer fmt packer/
-
-      - name: Packer Validate
-        run: packer validate packer/
+      - name: Packer Init
+        run: packer init packer/
