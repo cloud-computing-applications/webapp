@@ -44,7 +44,7 @@ build {
   }
 
   provisioner "file" {
-    source = "dist/webapp.zip"
+    source      = "dist/webapp.zip"
     destination = "/tmp/webapp.zip"
   }
 
@@ -57,7 +57,7 @@ build {
   }
 
   provisioner "file" {
-    source = "packer/csye6225.service"
+    source      = "packer/csye6225.service"
     destination = "/tmp/csye6225.service"
   }
 
