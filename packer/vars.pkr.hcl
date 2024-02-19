@@ -30,30 +30,6 @@ variable "disk_type" {
   type = string
 }
 
-variable "source_image_family" {
-  type = string
-}
-
-variable "ssh_username" {
-  type = string
-}
-
-variable "image_family" {
-  type = string
-}
-
-variable "machine_type" {
-  type = string
-}
-
-variable "disk_size" {
-  type = number
-}
-
-variable "disk_type" {
-  type = string
-}
-
 variable "network" {
   type = string
 }
