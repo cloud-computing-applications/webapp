@@ -35,6 +35,12 @@ jobs:
         run: |
           packer validate -var project_id=${{ secrets.PAK_VAR_PROJECT_ID }} \
           -var zone=${{ secrets.PAK_VAR_ZONE }} \
+          -var source_image_family=${{ secrets.PAK_VAR_SOURCE_IMAGE_FAMILY }} \
+          -var ssh_username=${{ secrets.PAK_VAR_SSH_USERNAME }} \
+          -var image_family=${{ secrets.PAK_VAR_IMAGE_FAMILY }} \
+          -var machine_type=${{ secrets.PAK_VAR_MACHINE_TYPE }} \
+          -var disk_size=${{ secrets.PAK_VAR_DISK_SIZE }} \
+          -var disk_type=${{ secrets.PAK_VAR_DISK_TYPE }} \
           -var network=${{ secrets.PAK_VAR_NETWORK }} \
           -var environment=${{ secrets.PAK_VAR_ENVIRONMENT }} \
           packer/
