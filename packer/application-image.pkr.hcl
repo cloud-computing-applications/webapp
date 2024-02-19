@@ -10,18 +10,18 @@ packer {
 source "googlecompute" "application-image" {
   project_id          = var.project_id
   credentials_json    = var.credentials
-  source_image_family = "centos-stream-8"
+  source_image_family = var.source_image_family
   zone                = var.zone
-  ssh_username        = "packer"
+  ssh_username        = var.ssh_username
   network             = var.network
-  image_name          = "webapp-${formatdate("YYYY-MM-DD't'hh-mm-ss'z'", timestamp())}"
-  image_family        = "webapp"
+  image_name          = join("-", [var.image_family, formatdate("YYYY-MM-DD't'hh-mm-ss'z'", timestamp())])
+  image_family        = var.image_family
   image_labels = {
     environment = var.environment
   }
-  machine_type = "e2-medium"
-  disk_size    = 20
-  disk_type    = "pd-standard"
+  machine_type = var.machine_type
+  disk_size    = var.disk_size
+  disk_type    = var.disk_type
 }
 
 build {
