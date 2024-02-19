@@ -8,6 +8,8 @@
     - PORT - Enter the port you want to run the application on
     - DB_USERNAME - Enter your MySQL username
     - DB_PASSWORD - Enter your MySQL password
+    - DB_DATABASE - Enter your MySQL database name
+    - DB_TEST_DATABASE - Enter your MySQL test database name
     - DB_HOST - Enter your MySQL host (if running locally, this would be "localhost")
 
 ## Instructions
