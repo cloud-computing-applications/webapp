@@ -30,5 +30,6 @@
 
 ## Instructions For Creating Image using Packer
 1. Run ```packer init packer/``` at the root directory to initialize packer
-2. Run ```packer validate packer/``` at the root directory to validate packer templates
-3. Run ```packer build packer/``` at the root directory to validate packer templates
+2. Run ```npm run build``` at the root directory to create application artifact
+3. Run ```packer validate packer/``` at the root directory to validate packer templates
+4. Run ```packer build packer/``` at the root directory to validate packer templates
