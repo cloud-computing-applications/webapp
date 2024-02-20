@@ -23,6 +23,10 @@
     - disk_type - Disk type of the disk used in the instance which is used for creating the image
     - network - network to use for the launched instance in order to create the image
     - environment - value for the image label "environment"
+    - GCP_PACKER_CREDENTIALS - gcp service account json credentials of your gcp project using which the packer will build image
+    - DB_USERNAME - Enter your MySQL username (used for creating database user in image)
+    - DB_PASSWORD - Enter your MySQL password (used for creating database user in image)
+    - DB_DATABASE - Enter your MySQL database name (used for creating database in image)
 
 ## Instructions For Running Application
 1. Run ```npm install``` at the root directory to install all the dependencies
