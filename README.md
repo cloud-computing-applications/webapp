@@ -28,7 +28,7 @@
     - DB_PASSWORD - Enter your MySQL password (used for creating database user in image)
     - DB_DATABASE - Enter your MySQL database name (used for creating database in image)
 
-## Instructions For Running Application
+## Instructions For Running Applica
 1. Run ```npm install``` at the root directory to install all the dependencies
 2. Run ```node index.js``` at the root directory to run the application
 
