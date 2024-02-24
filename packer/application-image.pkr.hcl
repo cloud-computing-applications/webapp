@@ -15,7 +15,7 @@ source "googlecompute" "application-image" {
   ssh_username        = var.ssh_username
   network             = var.network
   image_name          = join("-", [var.image_family, formatdate("YYYY-MM-DD't'hh-mm-ss'z'", timestamp())])
-  image_family        = var.image_family
+  image_family     = var.image_family
   image_labels = {
     environment = var.environment
   }
