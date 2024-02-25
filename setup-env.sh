@@ -1,9 +1,0 @@
-#!/bin/bash
-
-cat <<EOF > .env
-PORT="${PORT}"
-DB_USERNAME="${DB_USERNAME}"
-DB_PASSWORD="${DB_PASSWORD}"
-DB_DATABASE="${DB_DATABASE}"
-DB_HOST="${DB_HOST}"
-EOF
