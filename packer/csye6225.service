@@ -1,6 +1,6 @@
 [Unit]
 Description=CSYE 6225 App
-ConditionPathExists=/opt/webapp/package.json
+ConditionPathExists=/opt/webapp/.env
 After=network.target mysqld.service
 Requires=mysqld.service
 

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --exit",
-    "build": "mkdir -p dist && sh setup-env.sh && zip -r ./dist/webapp.zip ."
+    "build": "mkdir -p dist && zip -r ./dist/webapp.zip ."
   },
   "author": "",
   "license": "ISC",

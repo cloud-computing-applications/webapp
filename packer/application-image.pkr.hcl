@@ -35,15 +35,6 @@ build {
     script = "packer/setup-node.sh"
   }
 
-  provisioner "shell" {
-    environment_vars = [
-      "DB_USERNAME=${var.DB_USERNAME}",
-      "DB_PASSWORD=${var.DB_PASSWORD}",
-      "DB_DATABASE=${var.DB_DATABASE}"
-    ]
-    script = "packer/setup-db.sh"
-  }
-
   provisioner "file" {
     source      = "dist/webapp.zip"
     destination = "/tmp/webapp.zip"
