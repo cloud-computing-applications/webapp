@@ -7,6 +7,7 @@ const routesV1 = require('./routesV1');
 const health = require('./health');
 const noCacheMiddleWare = require('./middlewares/noCache');
 const { ValidationError, DatabaseError, AuthenticationError } = require('./errorHandler');
+const Logger = require('./logger/logger');
 
 const errorClasses = [ValidationError, DatabaseError, AuthenticationError];
 
@@ -15,9 +16,9 @@ let server;
 async function start(testDB = false, mock = false) {
     try {
         await dbBootstrap(testDB, mock);
-        console.log("DB connection established");
+        Logger.info({ message: "DB connection established" });
     } catch (err) {
-        console.log("DB connection lost");
+        Logger.error({ message: "DB connection lost" });
     }
 
     app.use(express.json());
@@ -28,7 +29,12 @@ async function start(testDB = false, mock = false) {
     app.use((err, req, res, next) => {
         for(const errorClass of errorClasses) {
             if(err instanceof errorClass) {
-                return res.status(err.httpStatusCode).send();
+                res.status(err.httpStatusCode).send();
+                Logger.info({ 
+                    message: err.message,
+                    ...(req.user_id && { user_id: req.user_id })
+                })
+                return;
             }
         }
 
@@ -41,7 +47,7 @@ async function start(testDB = false, mock = false) {
 
     const appListenPromise = new Promise((res, rej) => {
         server = app.listen(process.env.PORT, () => {
-            console.log(`Listening to port ${process.env.PORT}`);
+            Logger.info({ message: `Listening to port ${process.env.PORT}` });
             res();
         });
     })
