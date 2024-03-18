@@ -46,5 +46,6 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_TEST_DATABASE: ${{ secrets.DB_TEST_DATABASE }}
           DB_HOST: ${{ secrets.DB_HOST }}
+          ENVIRONMENT: ${{ secrets.TEST_ENV }}
         run: npm test
       

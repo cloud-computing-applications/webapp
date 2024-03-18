@@ -14,10 +14,15 @@ const Logger = winston.createLogger({
     winston.format.timestamp({ format: timezone }),
     capitalizeLevels(),
     winston.format.json()
-  ),
-  transports: [
-    new winston.transports.File({ filename: '/var/log/webapp/webapp.log' }),
-  ]
+  )
 });
+
+if(process.env.ENVIRONMENT == "TEST") {
+    Logger.add(new winston.transports.Console({
+        format: winston.format.json()
+    }));
+} else {
+    Logger.add(new winston.transports.File({ filename: process.env.LOG_FILE_PATH }));
+}
 
 module.exports = Logger;
