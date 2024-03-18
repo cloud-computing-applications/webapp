@@ -75,6 +75,7 @@ jobs:
       - name: Packer Build
         env: 
           GCP_PACKER_CREDENTIALS: ${{ secrets.GCP_PACKER_CREDENTIALS }}
+          LOG_FILE_PATH: ${{ secrets.LOG_FILE_PATH }}
         run: |
           packer build -var project_id=${{ secrets.PAK_VAR_PROJECT_ID }} \
           -var zone=${{ secrets.PAK_VAR_ZONE }} \
