@@ -12,6 +12,8 @@
     - DB_DATABASE - Enter your MySQL database name
     - DB_TEST_DATABASE - Enter your MySQL test database name
     - DB_HOST - Enter your MySQL host (if running locally, this would be "localhost")
+    - ENVIRONMENT - Set the environment of the application (DEVELOPMENT, TEST, PRODUCTION)
+    - LOG_FILE_PATH - Path of the log file where the application will dump it's logs (Not used for TEST Environment)
 6. Setup the following Environment Variables For Packer
     - project_id - ID of your gcp project
     - zone - Zone of webapp image
@@ -24,6 +26,7 @@
     - network - network to use for the launched instance in order to create the image
     - environment - value for the image label "environment"
     - GCP_PACKER_CREDENTIALS - gcp service account json credentials of your gcp project using which the packer will build image
+    - LOG_FILE_PATH - Path of the log file trailed by gcp ops agent for log explorer
 
 ## Instructions For Running Application
 1. Run ```npm install``` at the root directory to install all the dependencies
