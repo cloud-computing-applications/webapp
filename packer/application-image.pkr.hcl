@@ -56,4 +56,11 @@ build {
   provisioner "shell" {
     script = "packer/setup-service.sh"
   }
+
+  provisioner "shell" {
+    environment_vars = [
+      "LOG_FILE_PATH=${var.LOG_FILE_PATH}"
+    ]
+    script = "packer/setup-ops-agent.sh"
+  }
 }

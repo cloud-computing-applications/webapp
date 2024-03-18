@@ -43,3 +43,9 @@ variable "credentials" {
   default   = env("GCP_PACKER_CREDENTIALS")
   sensitive = true
 }
+
+variable "LOG_FILE_PATH" {
+  type      = string
+  default   = env("LOG_FILE_PATH")
+  sensitive = true
+}
