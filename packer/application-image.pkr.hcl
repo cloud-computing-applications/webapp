@@ -57,6 +57,11 @@ build {
     script = "packer/setup-service.sh"
   }
 
+  provisioner "file" {
+    source      = "packer/config.yaml"
+    destination = "/tmp/config.yaml"
+  }
+
   provisioner "shell" {
     environment_vars = [
       "LOG_FILE_PATH=${var.LOG_FILE_PATH}"
