@@ -19,6 +19,13 @@ class AuthenticationError extends Error {
     }
 }
 
+class PubSubError extends Error {
+    constructor({message, httpStatusCode}) {
+        super(message);
+        this.httpStatusCode = httpStatusCode;
+    }
+}
+
 const VALIDATION_ERROR_TYPES = {
     USER_CREATION_MISSING_DATA: { message: "Missing payload data in user creation", httpStatusCode: 400 },
     USER_CREATION_INVALID_DATA: { message: "Invalid payload data in user creation", httpStatusCode: 400 },
@@ -26,6 +33,10 @@ const VALIDATION_ERROR_TYPES = {
 
     USER_UPDATE_MISSING_DATA: { message: "Missing payload data in user update", httpStatusCode: 400 },
     USER_UPDATE_INVALID_DATA: { message: "Invalid payload data in user update", httpStatusCode: 400 },
+
+    USER_ACTIVATE_ALREADY_ACTIVATED: { message: "The user is already activated", httpStatusCode: 400 },
+    USER_ACTIVATE_LINK_EXPIRED: { message: "The link has expired", httpStatusCode: 410 },
+    USER_ACTIVATE_INVALID_LINK: { message: "User does not exist for this link", httpStatusCode: 400 }
 }
 
 const DATABASE_ERROR_TYPES = {
@@ -37,4 +48,8 @@ const AUTHENTICATION_ERROR_TYPES = {
     AUTHENTICATION_UNAUTHORIZED: { message: "Invalid Basic Token", httpStatusCode: 401 }
 }
 
-module.exports = { ValidationError, DatabaseError, AuthenticationError, VALIDATION_ERROR_TYPES, DATABASE_ERROR_TYPES, AUTHENTICATION_ERROR_TYPES };
+const PUB_SUB_ERROR_TYPES = {
+    PUBLISHING_FAILURE : { message: "Message Publishing Failed", httpStatusCode: 503 }
+} 
+
+module.exports = { ValidationError, DatabaseError, AuthenticationError, PubSubError, VALIDATION_ERROR_TYPES, DATABASE_ERROR_TYPES, AUTHENTICATION_ERROR_TYPES, PUB_SUB_ERROR_TYPES };

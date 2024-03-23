@@ -6,10 +6,10 @@ const app = express();
 const routesV1 = require('./routesV1');
 const health = require('./health');
 const noCacheMiddleWare = require('./middlewares/noCache');
-const { ValidationError, DatabaseError, AuthenticationError } = require('./errorHandler');
+const { ValidationError, DatabaseError, AuthenticationError, PubSubError } = require('./errorHandler');
 const Logger = require('./logger/logger');
 
-const errorClasses = [ValidationError, DatabaseError, AuthenticationError];
+const errorClasses = [ValidationError, DatabaseError, AuthenticationError, PubSubError];
 
 let server;
 
@@ -30,10 +30,17 @@ async function start(testDB = false, mock = false) {
         for(const errorClass of errorClasses) {
             if(err instanceof errorClass) {
                 res.status(err.httpStatusCode).send();
-                Logger.info({ 
-                    message: err.message,
-                    ...(req.user_id && { user_id: req.user_id })
-                })
+                if(err.httpStatusCode == 503) {
+                    Logger.error({ 
+                        message: err.message,
+                        ...(req.user_id && { user_id: req.user_id })
+                    })
+                } else {
+                    Logger.info({ 
+                        message: err.message,
+                        ...(req.user_id && { user_id: req.user_id })
+                    })
+                }
                 return;
             }
         }
