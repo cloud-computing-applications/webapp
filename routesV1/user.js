@@ -5,6 +5,26 @@ const Logger = require('../logger/logger');
 const router = express.Router();
 const { ValidationError, VALIDATION_ERROR_TYPES } = require('../errorHandler');
 
+router.get('/verify-email/:id', async (req, res, next) => {
+    if(Object.keys(req.query).length !=0 || (req.headers['content-length'] != undefined && req.headers['content-length'] != 0)) {
+        return res.status(400).send();
+    }
+
+    const user_id = req.params.id;
+
+    try {
+        await UserService.activateUser(user_id);
+        res.send("User Activated successfully");
+        Logger.info({ message: "User activated successfully", user_id: user_id });
+    } catch (err) {
+        return next(err);
+    }
+})
+
+router.all('/verify-email/:id', async (req, res) => {
+    return res.status(405).send();
+})
+
 router.post('/', async (req, res, next) => {
     if(Object.keys(req.query).length !=0) {
         return res.status(400).send();

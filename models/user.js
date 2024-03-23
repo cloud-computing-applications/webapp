@@ -32,6 +32,10 @@ module.exports = (sequelize) => {
             allowNull: false,
         },
 
+        is_verified: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true
+        }
     }, {
         timestamps: true,
         createdAt: 'account_created',

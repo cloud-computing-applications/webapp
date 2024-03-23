@@ -17,7 +17,7 @@ const Logger = winston.createLogger({
   )
 });
 
-if(process.env.ENVIRONMENT == "TEST") {
+if(process.env.ENVIRONMENT != "PRODUCTION") {
     Logger.add(new winston.transports.Console({
         format: winston.format.json()
     }));

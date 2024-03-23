@@ -2,13 +2,26 @@ const DB = require('../database/db');
 
 class UserRepository {
     static async createUser(username, password, first_name, last_name) {
-        const user = await DB.models.users.create({
-            username: username,
-            password: password,
-            first_name: first_name,
-            last_name: last_name
-        });
+        let userObj = {};
 
+        if(process.env.ENVIRONMENT != "PRODUCTION") {
+            userObj = {
+                username: username,
+                password: password,
+                first_name: first_name,
+                last_name: last_name
+            }
+        } else {
+            userObj = {
+                username: username,
+                password: password,
+                first_name: first_name,
+                last_name: last_name,
+                is_verified: false
+            }
+        }
+
+        const user = await DB.models.users.create(userObj);
         return user;
     }
 
