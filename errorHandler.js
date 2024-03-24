@@ -36,7 +36,8 @@ const VALIDATION_ERROR_TYPES = {
 
     USER_ACTIVATE_ALREADY_ACTIVATED: { message: "The user is already activated", httpStatusCode: 400 },
     USER_ACTIVATE_LINK_EXPIRED: { message: "The link has expired", httpStatusCode: 410 },
-    USER_ACTIVATE_INVALID_LINK: { message: "User does not exist for this link", httpStatusCode: 400 }
+    USER_ACTIVATE_INVALID_LINK: { message: "User does not exist for this link", httpStatusCode: 400 },
+    USER_ACTIVATE_TEST_USER: { message: "The user is a test user", httpStatusCode: 400 },
 }
 
 const DATABASE_ERROR_TYPES = {

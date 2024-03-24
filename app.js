@@ -45,6 +45,8 @@ async function start(testDB = false, mock = false) {
             }
         }
 
+        Logger.error({ message: err.message, stack: err.stack });
+
         stop();
     })
 

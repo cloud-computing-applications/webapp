@@ -10,10 +10,10 @@ router.get('/verify-email/:id', async (req, res, next) => {
         return res.status(400).send();
     }
 
-    const user_id = req.params.id;
+    const token = req.params.id;
 
     try {
-        await UserService.activateUser(user_id);
+        const user_id = await UserService.activateUser(token);
         res.send("User Activated successfully");
         Logger.info({ message: "User activated successfully", user_id: user_id });
     } catch (err) {
