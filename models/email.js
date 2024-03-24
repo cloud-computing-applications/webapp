@@ -8,6 +8,11 @@ module.exports = (sequelize) => {
             primaryKey: true
         },
 
+        user_id: {
+            type: DataTypes.UUID,
+            allowNull: false
+        },
+
         token: {
             type: DataTypes.STRING,
             allowNull: false
@@ -36,7 +41,7 @@ module.exports = (sequelize) => {
         updatedAt: 'email_updated',
         indexes:[
             {
-                unique: false,
+                unique: true,
                 fields:['token']
             }
         ]

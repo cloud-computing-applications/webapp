@@ -8,47 +8,54 @@ const EmailRepository = require("../repositories/email");
 class UserService {
     static saltRounds = 10;
 
-    static async activateUser(user_id) {
+    static async activateUser(token) {
+        let emailRecord;
+
         try {
-            let userRecord, emailRecord;
-            
-            try {
-                [
-                    userRecord,
-                    emailRecord
-                ] = await Promise.all([
-                    UserRepository.findUserById(user_id),
-                    EmailRepository.findEmailByToken(user_id)
-                ])
-            } catch (err) {
-                if(err.name == "SequelizeConnectionRefusedError") {
-                    throw new DatabaseError(DATABASE_ERROR_TYPES.DATABASE_CONNECTION_REFUSED);
-                }
-            }
-
-            if(!userRecord || !emailRecord) {
-                throw new ValidationError(VALIDATION_ERROR_TYPES.USER_ACTIVATE_INVALID_LINK);
-            }
-
-            const userData = userRecord.dataValues;
-            const emailData = emailRecord.dataValues;
-
-            if(userData.is_verified) {
-                throw new ValidationError(VALIDATION_ERROR_TYPES.USER_ACTIVATE_ALREADY_ACTIVATED);
-            }
-
-            if(moment().isAfter(moment(emailData.expiry_date))) {
-                throw new ValidationError(VALIDATION_ERROR_TYPES.USER_ACTIVATE_LINK_EXPIRED);
-            }
-
-            await UserRepository.updateUser(user_id, { is_verified: true });
+            emailRecord = await EmailRepository.findEmailByToken(token);
         } catch (err) {
             if(err.name == "SequelizeConnectionRefusedError") {
                 throw new DatabaseError(DATABASE_ERROR_TYPES.DATABASE_CONNECTION_REFUSED);
             }
-
-            throw err;
         }
+
+        if(!emailRecord) {
+            throw new ValidationError(VALIDATION_ERROR_TYPES.USER_ACTIVATE_INVALID_LINK);
+        }
+
+        const emailData = emailRecord.dataValues;
+        const user_id = emailData.user_id;
+
+        let userRecord;
+        try {
+            userRecord = await UserRepository.findUserById(user_id);
+        } catch (err) {
+            if(err.name == "SequelizeConnectionRefusedError") {
+                throw new DatabaseError(DATABASE_ERROR_TYPES.DATABASE_CONNECTION_REFUSED);
+            }
+        }
+
+        if(!userRecord) {
+            throw new ValidationError(VALIDATION_ERROR_TYPES.USER_ACTIVATE_INVALID_LINK);
+        }
+
+        const userData = userRecord.dataValues;
+
+        if(userData.is_verified) {
+            throw new ValidationError(VALIDATION_ERROR_TYPES.USER_ACTIVATE_ALREADY_ACTIVATED);
+        }
+
+        if(userData.is_verified === null) {
+            throw new ValidationError(VALIDATION_ERROR_TYPES.USER_ACTIVATE_TEST_USER);
+        }
+
+        if(moment().isAfter(moment(emailData.expiry_date))) {
+            throw new ValidationError(VALIDATION_ERROR_TYPES.USER_ACTIVATE_LINK_EXPIRED);
+        }
+
+        await UserRepository.updateUser(user_id, { is_verified: true });
+
+        return user_id;
     }
 
     static async createUser(username, password, first_name, last_name) {

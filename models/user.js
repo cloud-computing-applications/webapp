@@ -11,7 +11,6 @@ module.exports = (sequelize) => {
         username: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
             validate: {
                 isEmail: true
             }
@@ -39,7 +38,13 @@ module.exports = (sequelize) => {
     }, {
         timestamps: true,
         createdAt: 'account_created',
-        updatedAt: 'account_updated'
+        updatedAt: 'account_updated',
+        indexes:[
+            {
+                unique: true,
+                fields:['username']
+            }
+        ]
     });
 
     return UserModel;
