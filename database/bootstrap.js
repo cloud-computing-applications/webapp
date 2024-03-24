@@ -13,7 +13,8 @@ module.exports = async (testDB = false, mock = false) => {
         });
         
         const models = [
-            require('../models/user')(DB.sequelize)
+            require('../models/user')(DB.sequelize),
+            require('../models/email')(DB.sequelize)
         ];
         
         DB.models = {};

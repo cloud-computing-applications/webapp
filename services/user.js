@@ -3,25 +3,41 @@ const { ValidationError, VALIDATION_ERROR_TYPES, DatabaseError, DATABASE_ERROR_T
 const HelperFunctions = require("../helper");
 const UserRepository = require('../repositories/user');
 const bcrypt = require('bcrypt');
+const EmailRepository = require("../repositories/email");
 
 class UserService {
     static saltRounds = 10;
 
     static async activateUser(user_id) {
         try {
-            const userRecord = await UserRepository.findUserById(user_id);
+            let userRecord, emailRecord;
+            
+            try {
+                [
+                    userRecord,
+                    emailRecord
+                ] = await Promise.all([
+                    UserRepository.findUserById(user_id),
+                    EmailRepository.findEmailByToken(user_id)
+                ])
+            } catch (err) {
+                if(err.name == "SequelizeConnectionRefusedError") {
+                    throw new DatabaseError(DATABASE_ERROR_TYPES.DATABASE_CONNECTION_REFUSED);
+                }
+            }
 
-            if(!userRecord) {
+            if(!userRecord || !emailRecord) {
                 throw new ValidationError(VALIDATION_ERROR_TYPES.USER_ACTIVATE_INVALID_LINK);
             }
 
             const userData = userRecord.dataValues;
+            const emailData = emailRecord.dataValues;
 
             if(userData.is_verified) {
                 throw new ValidationError(VALIDATION_ERROR_TYPES.USER_ACTIVATE_ALREADY_ACTIVATED);
             }
 
-            if(moment().isAfter(moment(userData.account_created).add(process.env.VERIFICATION_EXPIRY, 'seconds'))) {
+            if(moment().isAfter(moment(emailData.expiry_date))) {
                 throw new ValidationError(VALIDATION_ERROR_TYPES.USER_ACTIVATE_LINK_EXPIRED);
             }
 
