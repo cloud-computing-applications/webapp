@@ -5,7 +5,8 @@
 2. npm v10.2.3 or above
 3. MySQL Database Server running locally on port 3306
 4. Download Packer v1.10.1 or above
-5. Setup the following Environment Variables For Webapp
+5. Setup a Pub/Sub topic on Google Cloud Platform to publish email verification messages
+6. Setup the following Environment Variables For Webapp
     - PORT - Enter the port you want to run the application on
     - DB_USERNAME - Enter your MySQL username
     - DB_PASSWORD - Enter your MySQL password
@@ -14,7 +15,9 @@
     - DB_HOST - Enter your MySQL host (if running locally, this would be "localhost")
     - ENVIRONMENT - Set the environment of the application (DEVELOPMENT, TEST, PRODUCTION)
     - LOG_FILE_PATH - Path of the log file where the application will dump it's logs (Not used for TEST Environment)
-6. Setup the following Environment Variables For Packer
+    - TOPIC_NAME - Name of the Pub/Sub Topic to which the message regarding email verification will be published 
+    - EXPIRY_BUFFER - Amount of time after which the verification email will be expired (in seconds)
+7. Setup the following Environment Variables For Packer
     - project_id - ID of your gcp project
     - zone - Zone of webapp image
     - source_image_family - source image family name
