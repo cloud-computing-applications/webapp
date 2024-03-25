@@ -16,7 +16,7 @@
     - ENVIRONMENT - Set the environment of the application (DEVELOPMENT, TEST, PRODUCTION)
     - LOG_FILE_PATH - Path of the log file where the application will dump it's logs (Not used for TEST Environment)
     - TOPIC_NAME - Name of the Pub/Sub Topic to which the message regarding email verification will be published 
-    - EXPIRY_BUFFER - Amount of time after which the verification email will be expired (in seconds)
+    - EXPIRY_BUFFER - Amount of time after which the verification link will expire (in seconds)
 7. Setup the following Environment Variables For Packer
     - project_id - ID of your gcp project
     - zone - Zone of webapp image
