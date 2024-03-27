@@ -33,7 +33,7 @@ async function auth(req, res, next) {
         const userData = userRecord.dataValues;
 
         if(userData.is_verified === false) {
-            return next(new AuthenticationError(AUTHENTICATION_ERROR_TYPES.AUTHENTICATION_UNAUTHORIZED));
+            return next(new AuthenticationError(AUTHENTICATION_ERROR_TYPES.AUTHENTICATION_INACTIVE));
         }
 
         const isPasswordValid = await bcrypt.compare(password, userData.password);
