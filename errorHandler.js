@@ -47,7 +47,7 @@ const DATABASE_ERROR_TYPES = {
 
 const AUTHENTICATION_ERROR_TYPES = {
     AUTHENTICATION_UNAUTHORIZED: { message: "Invalid Basic Token", httpStatusCode: 401 },
-    AUTHENTICATION_INACTIVE: { message: "Email verification is required for the user", httpStatusCode: 401 }
+    AUTHENTICATION_INACTIVE: { message: "Email verification is required for the user", httpStatusCode: 403 }
 }
 
 const PUB_SUB_ERROR_TYPES = {
