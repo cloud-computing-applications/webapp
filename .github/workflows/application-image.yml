@@ -61,6 +61,11 @@ jobs:
         with:
           node-version: 20
 
+      - name: Authenticate GCP account for deployment
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{secrets.DEPLOY_SA_CREDENTIALS}}
+
       - name: Setup Packer
         uses: hashicorp/setup-packer@main
         with:
@@ -87,4 +92,39 @@ jobs:
           -var disk_type=${{ secrets.PAK_VAR_DISK_TYPE }} \
           -var network=${{ secrets.PAK_VAR_NETWORK }} \
           -var environment=${{ secrets.PAK_VAR_ENVIRONMENT }} \
-          packer/
+          packer/ 2>&1 | tee packer-output.txt
+        
+      - name: Deploy
+        env:
+          DEPLOY_DB_USERNAME: ${{ secrets.DEPLOY_DB_USERNAME }}
+          DEPLOY_DB_DATABASE: ${{ secrets.DEPLOY_DB_DATABASE }}
+          DEPLOY_ENVIRONMENT: ${{ secrets.DEPLOY_ENVIRONMENT }}
+          DEPLOY_LOG_FILE_PATH: ${{ secrets.DEPLOY_LOG_FILE_PATH }}
+          DEPLOY_TOPIC_NAME: ${{ secrets.DEPLOY_TOPIC_NAME }}
+          DEPLOY_EXPIRY_BUFFER: ${{ secrets.DEPLOY_EXPIRY_BUFFER }}
+          DEPLOY_PROJECT_ID: ${{ secrets.DEPLOY_PROJECT_ID }}
+          DEPLOY_INSTANCE_TEMPLATE_NAME_PREFIX: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_NAME_PREFIX }}
+          DEPLOY_REGION: ${{ secrets.DEPLOY_REGION }}
+          DEPLOY_INSTANCE_TEMPLATE_TAGS: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_TAGS }}
+          DEPLOY_INSTANCE_TEMPLATE_MACHINE_TYPE: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_MACHINE_TYPE }}
+          DEPLOY_INSTANCE_TEMPLATE_DISK_SIZE: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_DISK_SIZE }}
+          DEPLOY_INSTANCE_TEMPLATE_DISK_TYPE: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_DISK_TYPE }}
+          DEPLOY_INSTANCE_TEMPLATE_BOOT_DISK_AUTODELETE: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_BOOT_DISK_AUTODELETE }}
+          DEPLOY_INSTANCE_TEMPLATE_SCOPES: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_SCOPES }}
+          DEPLOY_INSTANCE_TEMPLATE_PROVISIONING_MODEL: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_PROVISIONING_MODEL }}
+          DEPLOY_INSTANCE_TEMPLATE_ON_HOST_MAINTAINANCE: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_ON_HOST_MAINTAINANCE }}
+          DEPLOY_INSTANCE_TEMPLATE_RESTART_ON_FAILURE: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_RESTART_ON_FAILURE }}
+          DEPLOY_INSTANCE_TEMPLATE_NETWORK_NAME: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_NETWORK_NAME }}
+          DEPLOY_INSTANCE_TEMPLATE_SUB_NETWORK_NAME: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_SUB_NETWORK_NAME }}
+          DEPLOY_INSTANCE_TEMPLATE_SA_NAME: ${{ secrets.DEPLOY_INSTANCE_TEMPLATE_SA_NAME }}
+          DEPLOY_INSTANCE_GROUP_MANAGER_NAME: ${{ secrets.DEPLOY_INSTANCE_GROUP_MANAGER_NAME }}
+          DEPLOY_ROLLING_ACTION_MAX_UNAVAILABLE: ${{ secrets.DEPLOY_ROLLING_ACTION_MAX_UNAVAILABLE }}
+          DEPLOY_ROLLING_ACTION_MINIMAL_ACTION: ${{ secrets.DEPLOY_ROLLING_ACTION_MINIMAL_ACTION }}
+          DEPLOY_ROLLING_ACTION_REPLACEMENT_METHOD: ${{ secrets.DEPLOY_ROLLING_ACTION_REPLACEMENT_METHOD }}
+          DEPLOY_ROLLING_ACTION_TYPE: ${{ secrets.DEPLOY_ROLLING_ACTION_TYPE }}
+          DEPLOY_WAIT_UNTIL_TIMEOUT: ${{ secrets.DEPLOY_WAIT_UNTIL_TIMEOUT }}
+          credentials_json: ${{secrets.DEPLOY_SA_CREDENTIALS}}
+        run: |
+          image_name=$(tail -1 packer-output.txt | awk -F ' ' '{print $NF}')
+          echo "Image name : $image_name"
+          sh deploy.sh "$image_name"
