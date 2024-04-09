@@ -128,5 +128,6 @@ jobs:
           if [[ ! -f "packer-output.txt" ]]; then
             exit 1
           fi
+          image_name=$(tail -1 packer-output.txt | awk -F ' ' '{print $NF}')
           echo "Image name : $image_name"
           sh deploy.sh "$image_name"
