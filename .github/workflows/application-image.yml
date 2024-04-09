@@ -96,6 +96,7 @@ jobs:
         
       - name: Deploy
         env:
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
           DEPLOY_DB_USERNAME: ${{ secrets.DEPLOY_DB_USERNAME }}
           DEPLOY_DB_DATABASE: ${{ secrets.DEPLOY_DB_DATABASE }}
           DEPLOY_ENVIRONMENT: ${{ secrets.DEPLOY_ENVIRONMENT }}
