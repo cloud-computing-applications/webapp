@@ -126,7 +126,7 @@ jobs:
           credentials_json: ${{secrets.DEPLOY_SA_CREDENTIALS}}
         run: |
           if ! image_name=$(tail -1 packer-output.txt | awk -F ' ' '{print $NF}'); then
-            exit 1
+          exit 1
           fi
           echo "Image name : $image_name"
           sh deploy.sh "$image_name"
