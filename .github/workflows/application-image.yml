@@ -125,6 +125,8 @@ jobs:
           DEPLOY_WAIT_UNTIL_TIMEOUT: ${{ secrets.DEPLOY_WAIT_UNTIL_TIMEOUT }}
           credentials_json: ${{secrets.DEPLOY_SA_CREDENTIALS}}
         run: |
-          image_name=$(tail -1 packer-output.txt | awk -F ' ' '{print $NF}')
+          if ! image_name=$(tail -1 packer-output.txt | awk -F ' ' '{print $NF}'); then
+            exit 1
+          fi
           echo "Image name : $image_name"
           sh deploy.sh "$image_name"
