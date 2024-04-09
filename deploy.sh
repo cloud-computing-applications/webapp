@@ -38,6 +38,7 @@ DEPLOY_INSTANCE_TEMPLATE_IMAGE_NAME=$1
 gcloud compute instance-templates create "$DEPLOY_INSTANCE_TEMPLATE_NAME" \
 --region="$DEPLOY_REGION" \
 --machine-type="$DEPLOY_INSTANCE_TEMPLATE_MACHINE_TYPE" \
+$(if [ "$DEPLOY_INSTANCE_TEMPLATE_CAN_IP_FORWARD" = "true" ]; then echo "--can-ip-forward"; fi) \
 --image="$DEPLOY_INSTANCE_TEMPLATE_IMAGE_NAME" \
 --tags="$DEPLOY_INSTANCE_TEMPLATE_TAGS" \
 --provisioning-model="$DEPLOY_INSTANCE_TEMPLATE_PROVISIONING_MODEL" \
