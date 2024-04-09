@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 DEPLOY_DB_HOST=$(gcloud secrets versions access latest --secret="DB_HOST")
 DEPLOY_DB_PASSWORD=$(gcloud secrets versions access latest --secret="DB_PASSWORD")
 DEPLOY_VM_KMS_KEY=$(gcloud secrets versions access latest --secret="VM_KMS_KEY")
