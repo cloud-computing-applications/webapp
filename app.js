@@ -24,7 +24,7 @@ async function start(testDB = false, mock = false) {
     app.use(express.json());
 
     app.use('/healthz', noCacheMiddleWare, health);
-    app.use('/v1', routesV1);
+    app.use('/v2', routesV1);
 
     app.use((err, req, res, next) => {
         for(const errorClass of errorClasses) {

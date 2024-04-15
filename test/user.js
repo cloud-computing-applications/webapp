@@ -57,7 +57,7 @@ let dummyUserCombinationTest_Basic_Token = Buffer.from(`${dummyUserCombinationTe
 describe('User Endpoints', async () => {
     describe('Create User', async() => {
         it('New User with valid Payload should get 201 response code with valid response body', async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -77,7 +77,7 @@ describe('User Endpoints', async () => {
         });
 
         it('New User with valid Payload and untrimmed field should get 201 response code with trimmed response body', async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -98,7 +98,7 @@ describe('User Endpoints', async () => {
         });
 
         it('New User with missing Payload fields should get 400 response code', async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -109,7 +109,7 @@ describe('User Endpoints', async () => {
         })
 
         it('New User with missing Payload value should get 400 response code', async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -120,7 +120,7 @@ describe('User Endpoints', async () => {
         })
 
         it('Existing user should get 400 response code', async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -131,7 +131,7 @@ describe('User Endpoints', async () => {
         })
 
         it('New user with Invalid username should get 400 response code', async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -142,7 +142,7 @@ describe('User Endpoints', async () => {
         })
 
         it('New user with query parameters should get 400 response code', async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user?test=123`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user?test=123`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -153,7 +153,7 @@ describe('User Endpoints', async () => {
         })
 
         it('New user with wrong method should get 405 response code', async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json'
@@ -166,7 +166,7 @@ describe('User Endpoints', async () => {
 
     describe("Get User", async () => {
         it('Existing User should get 200 response code', async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ describe('User Endpoints', async () => {
         })
 
         it('Non Existing User should get 401 response code', async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
@@ -197,7 +197,7 @@ describe('User Endpoints', async () => {
         })
 
         it('Get User with query parameters should get 400 response code', async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user/self?test=123`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user/self?test=123`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
@@ -211,7 +211,7 @@ describe('User Endpoints', async () => {
     describe("Update User", async () => {
         it("Update Existing User should get 204 response code", async () => {
             const newPassword = "password_new";
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
@@ -229,7 +229,7 @@ describe('User Endpoints', async () => {
         })
 
         it("Update Existing User with a subset of valid fields should get 204 response code", async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
@@ -244,7 +244,7 @@ describe('User Endpoints', async () => {
         })
 
         it("Update Existing User with invalid fields should get 400 response code", async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
@@ -260,7 +260,7 @@ describe('User Endpoints', async () => {
         })
 
         it("Update Existing User with query parameters should get 400 response code", async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user/self?test=123`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user/self?test=123`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
@@ -275,7 +275,7 @@ describe('User Endpoints', async () => {
         })
 
         it("Update Non Existing User should get 401 response code", async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
@@ -291,7 +291,7 @@ describe('User Endpoints', async () => {
         })
 
         it("Update Existing User with wrong method should get 405 response code", async () => {
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "OPTIONS",
                 headers: {
                     'Content-Type': 'application/json',
@@ -307,7 +307,7 @@ describe('User Endpoints', async () => {
 
         it("Update Existing User with untrimmed field should get 204 response code with fields set as trimmed", async () => {
             const newFirstName = "       dummy new method    ";
-            const res = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const res = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
@@ -320,7 +320,7 @@ describe('User Endpoints', async () => {
 
             assert.equal(res.status, 204);
 
-            const resUserData = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const resUserData = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
@@ -338,7 +338,7 @@ describe('User Endpoints', async () => {
 
     describe("Combination Test", async () => {
         it('Create an account, and using the GET call, validate account exists', async () => {
-            const createUserRes = await fetch(`http://localhost:${process.env.PORT}/v1/user`, {
+            const createUserRes = await fetch(`http://localhost:${process.env.PORT}/v2/user`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -357,7 +357,7 @@ describe('User Endpoints', async () => {
             assert.notEqual(createUserData.account_created, undefined);
             assert.notEqual(createUserData.account_updated, undefined);
 
-            const getUserRes = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const getUserRes = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
@@ -381,7 +381,7 @@ describe('User Endpoints', async () => {
             const newPassword = "password_new";
             const newFirstName = "test new";
             const newLastName = "last new"
-            const updateUserRes = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const updateUserRes = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
@@ -395,7 +395,7 @@ describe('User Endpoints', async () => {
             });
             assert.equal(updateUserRes.status, 204);
 
-            const getUserResUnAuthorized = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const getUserResUnAuthorized = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
@@ -405,7 +405,7 @@ describe('User Endpoints', async () => {
             assert.equal(getUserResUnAuthorized.status, 401);
 
             dummyUserCombinationTest_Basic_Token = Buffer.from(`${dummyUserCombinationTest.username}:${newPassword}`, 'utf8').toString('base64');
-            const getUserResAuthorized = await fetch(`http://localhost:${process.env.PORT}/v1/user/self`, {
+            const getUserResAuthorized = await fetch(`http://localhost:${process.env.PORT}/v2/user/self`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
